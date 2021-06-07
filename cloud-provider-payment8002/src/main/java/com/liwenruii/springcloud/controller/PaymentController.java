@@ -1,20 +1,15 @@
-package com.liwenrui.springcloud.controller;
+package com.liwenruii.springcloud.controller;
 
 import com.liwenrui.springcloud.entities.Payment;
 import com.liwenrui.springcloud.result.CommonResult;
-import com.liwenrui.springcloud.service.PaymentService;
+import com.liwenruii.springcloud.seeervice.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import java.util.List;
-
 /**
- * Created on 2021/6/6
+ * Created on 2021/6/7
  *
  * @author liwenrui
  */
@@ -27,9 +22,6 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
-
-    @Autowired
-    private DiscoveryClient discoveryClient;
 
     @GetMapping(value = "/payment/get/{id}")
     public CommonResult<Payment> getPaymentById(@PathVariable("id") Long id){
@@ -53,24 +45,6 @@ public class PaymentController {
         }else{
             return new CommonResult(444,"插入数据库失败",null);
         }
-    }
-
-    @GetMapping("/payment/discovery")
-    public Object discovery(){
-
-        List<String> services = discoveryClient.getServices();
-
-        for (String service : services) {
-            log.info("====service:" + service);
-        }
-
-        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
-        for (ServiceInstance instance : instances) {
-            log.info(instance.getServiceId()+"\t" + instance.getHost()+"\t" + instance.getPort()+"\t" + instance.getUri());
-        }
-
-        return this.discoveryClient;
-
     }
 
 
