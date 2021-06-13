@@ -1,0 +1,42 @@
+server:
+  port: 80
+
+eureka:
+  client:
+    register-with-eureka: false
+    #是否从EurekaServer抓取已有的注册信息，默认为true。单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        #连接到目标的时间，此处会收到注册中心启动中的影响。设置为3秒钟，如果注册中心有明显的不在线，基本是毫秒级熔断拒绝
+        connectTimeout: 3000
+        #获取目标连接后执行的最长时间，设置为32秒，即服务最长时
+        readTimeout: 32000
+
+#超时时间配置，此处全局超时配置时间大于@HystrixProperty配置时间后，@HystrixProperty注解中的超时才生效
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+
+
+
+#设置feign客户端超时时间(OpenFeign默认支持ribbon)
+#ribbon:
+#  #指的是建立连接所用的时间，适用于网络状况正常的情况下,两端连接所用的时间
+#  ReadTimeout: 15000
+#  #指的是建立连接后从服务器读取到可用资源所用的时间
+#  ConnectTimeout: 15000
+
+
+
